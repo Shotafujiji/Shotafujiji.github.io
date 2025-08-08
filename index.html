@@ -1,432 +1,415 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ja">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #bebebe; -webkit-text-stroke: #bebebe}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #bebebe; -webkit-text-stroke: #bebebe; min-height: 16.0px}
-    span.s1 {font-kerning: none}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>都心から2時間圏内、猛暑を避けてゴルフを楽しむコースガイド</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            height: 60vh;
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+        }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .rank-badge {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+        .gold { background: linear-gradient(145deg, #d4af37, #b18c2b); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .silver { background: linear-gradient(145deg, #c0c0c0, #a9a9a9); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .bronze { background: linear-gradient(145deg, #cd7f32, #a06628); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .other { background: linear-gradient(145deg, #60a5fa, #3b82f6); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* スマートフォン用のスタイル */
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 85vw; /* グラフの高さを画面幅に合わせる */
+                max-height: 450px; /* 高くなりすぎないように最大値を設定 */
+            }
+        }
+    </style>
 </head>
-<body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="ja"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;都心から2時間圏内、猛暑を避けてゴルフを楽しむコースガイド&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.jsdelivr.net/npm/chart.js"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;style&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>body {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-family: 'Noto Sans JP', sans-serif;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background-color: #f0f4f8;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.chart-container {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>position: relative;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 60vh;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 100%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>max-width: 800px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: auto;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.glassmorphism {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>background: rgba(255, 255, 255, 0.6);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>backdrop-filter: blur(10px);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>-webkit-backdrop-filter: blur(10px);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 1px solid rgba(255, 255, 255, 0.2);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.rank-badge {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 2.5rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 2.5rem;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 50%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>display: flex;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>align-items: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>justify-content: center;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>font-weight: bold;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>color: white;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>flex-shrink: 0;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.gold { background: linear-gradient(145deg, #d4af37, #b18c2b); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.silver { background: linear-gradient(145deg, #c0c0c0, #a9a9a9); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.bronze { background: linear-gradient(145deg, #cd7f32, #a06628); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.other { background: linear-gradient(145deg, #60a5fa, #3b82f6); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>.loader {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border: 4px solid #f3f3f3;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-top: 4px solid #3498db;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>border-radius: 50%;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>width: 24px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>height: 24px;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>animation: spin 1s linear infinite;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>margin: 1rem auto;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@keyframes spin {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>0% { transform: rotate(0deg); }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>100% { transform: rotate(360deg); }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>/* スマートフォン用のスタイル */</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>@media (max-width: 768px) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>.chart-container {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>height: 85vw; /* グラフの高さを画面幅に合わせる */</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>max-height: 450px; /* 高くなりすぎないように最大値を設定 */</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body class="text-gray-800"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;!-- ヘッダー --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;header class="bg-teal-800 text-white p-8 md:p-16 rounded-b-3xl shadow-2xl"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div class="bg-black bg-opacity-20 p-6 rounded-xl"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h1 class="text-3xl md:text-5xl font-bold mb-2 text-shadow"&gt;ゴルフ場選定ガイド&lt;/h1&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;p class="text-lg md:text-2xl"&gt;都心から2時間圏内、猛暑を避けてゴルフを楽しむコースガイド&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;main class="container mx-auto p-4 md:p-8"&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- ランキング一覧セクション --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;section id="summary-ranking" class="mb-12"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700"&gt;ランキング一覧&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="glassmorphism p-6 rounded-2xl shadow-lg max-w-5xl mx-auto"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="grid md:grid-cols-2 gap-x-8 gap-y-6"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-xl font-bold mb-4 text-center text-teal-700"&gt;フルコース Top 10&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;ol id="summary-full-courses" class="space-y-3 text-gray-800"&gt;&lt;/ol&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h3 class="text-xl font-bold mb-4 text-center text-sky-700"&gt;ショートコース Top 5&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;ol id="summary-short-courses" class="space-y-3 text-gray-800"&gt;&lt;/ol&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 比較ツールセクション --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;section id="comparison-tool" class="mb-12"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700"&gt;ゴルフ場 比較ツール&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="glassmorphism p-6 rounded-2xl shadow-lg"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="mb-6"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;h3 class="font-bold text-lg mb-4 text-center"&gt;比較したいフルコースを選択してください (最大5件)&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div id="course-selector" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;!-- チェックボックスはJSで動的に生成 --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="chart-container"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;canvas id="radarChart"&gt;&lt;/canvas&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- 詳細ランキングセクション --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;section id="ranking" class="mb-12"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-700"&gt;厳選ゴルフコース詳細&lt;/h2&gt;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- フルコースランキング --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="mb-12"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3 class="text-xl md:text-2xl font-bold mb-6 text-center bg-teal-600 text-white py-3 rounded-lg shadow-md"&gt;フルコース10選&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div id="full-course-ranking" class="grid gap-6 md:grid-cols-2"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;!-- ランキングカードはJSで動的に生成 --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;!-- ショートコースランキング --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;h3 class="text-xl md:text-2xl font-bold mb-6 text-center bg-sky-600 text-white py-3 rounded-lg shadow-md"&gt;ショートコース5選&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div id="short-course-ranking" class="grid gap-6 md:grid-cols-2"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;!-- ランキングカードはJSで動的に生成 --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;!-- リサーチ方針セクション --&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;section id="research-policy" class="glassmorphism p-6 md:p-8 rounded-2xl shadow-lg"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700"&gt;リサーチ方針について&lt;/h2&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;div class="max-w-4xl mx-auto space-y-6"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold mb-2 text-teal-700"&gt;我々の評価基準: 卓越性を測る4つの柱&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p class="leading-relaxed"&gt;本レポートで紹介するゴルフコースは、以下の4つの評価軸に基づいて厳選、分析されています。これにより、読者は自身の価値観に最も合致した一軒を見つけ出すことが可能となります。&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;ul class="list-disc list-inside mt-4 space-y-2"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;li&gt;&lt;strong&gt;アクセス (Access):&lt;/strong&gt; 単純な直線距離ではなく、都心(例:新宿)を起点とした現実的な所要時間を重視します。主要幹線道路の交通状況を考慮し、「2時間以内」という基準を設けています。&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;li&gt;&lt;strong&gt;涼しさ (Coolness):&lt;/strong&gt; 標高(メートル)と直接的に相関します。標高が100m上昇するごとに気温は約0.65℃低下すると言われ、標高1,000mのコースは平地より約6.5℃低い爽快な環境を提供します。&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;li&gt;&lt;strong&gt;予算 (Budget):&lt;/strong&gt; 平日および週末のグリーンフィーを実用的に案内します。各コースを「プレミアム」「ミドルレンジ」「バリュー」の3つの価格帯に分類し、予算に応じた選択をサポートします。&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;li&gt;&lt;strong&gt;品質 (Quality):&lt;/strong&gt; 楽天GORAやGDOといった主要な予約サイトのユーザーレビューを総合的に分析した複合スコアです。コースメンテナンス、戦略性、サービス、施設の充実度といった質的なフィードバックを評価に反映させています。&lt;/li&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/ul&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;h3 class="text-xl font-bold mb-2 text-teal-700"&gt;データに関する注記&lt;/h3&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;p class="leading-relaxed"&gt;ゴルフ場の標高やユーザー評価といったデータは、参照する情報源によって僅かな差異が見られる場合があります。本レポートでは、複数の情報を横断的に検証し、最も一貫性があり、最新であると判断された数値を採用しています。これにより、読者に提供する情報の正確性と信頼性を最大限に高めています。&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/section&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;footer class="text-center p-4 mt-8 text-gray-500 text-sm"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;p&gt;このウェブサイトは提供されたレポートに基づき作成されています。&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/footer&gt;</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// --- データ定義 ---</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const fullCourses = [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'fuji_classic', name: '富士クラシック', rank: 1, elevation: 1193, access: 110, budget: 'プレミアム', price: '平日:約18,800円~', quality: 4.5, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190031/', description: '設計の鬼才デズモンド・ミュアヘッドが「富嶽三十六景」をモチーフにした芸術的コース。エリア最高クラスの標高を誇り、全ホールから雄大な富士山を望める圧倒的な景観が魅力。', expert_view: '「アクセス、涼しさ、予算、品質」の4軸を最も高次元で満たす。アートと自然が融合した空間は、スコアを競うだけでなく、ゴルフそのものを楽しむ「楽園」と言える。', concern: '価格帯はプレミアムクラス。独創的なレイアウトは初心者にはやや挑戦的に感じられる可能性も。' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'narusawa_gc', name: '鳴沢ゴルフ倶楽部', rank: 2, elevation: 1046, access: 90, budget: 'プレミアム', price: '平日:20,000円台~', quality: 4.4, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190025/', description: '女子プロトーナメント開催実績が品質を物語る威厳に満ちたコース。自然の地形美を活かしたレイアウトと、超高難易度のグリーンが挑戦意欲を掻き立てる。', expert_view: '富士山麓エリアにおける「ゴルフの聖地」。単なるリラックスの場でなく、自らの技術と戦略を試す「挑戦の場」。最高の環境で最高の挑戦をしたいゴルファーのためのコース。', concern: '非常に高価格帯であり、グリーンの難易度は国内屈指。ジャケット着用必須など、格式の高さも特徴。' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'forest_narusawa', name: 'フォレスト鳴沢ゴルフ&amp;カントリークラブ', rank: 3, elevation: 1091, access: 90, budget: 'プレミアム', price: '週末午後:約20,820円~', quality: 4.6, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190028/', description: '赤松と白樺に囲まれた自然豊かな18ホール。特に食事の評価が群を抜いており、プレー以外の楽しみも豊富。卓越したホスピタリティが光る。', expert_view: '「総合的なリゾート体験」を求めるゴルファーに最適。コース、美食、洗練された雰囲気が揃い、特に女性からの支持が厚い。上質な一日を過ごしたいならここ以上はない。', concern: '価格はプレミアムクラス。人気が高いため、週末や良い時間帯の予約は早めが賢明。' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'amagi_kogen', name: '天城高原ゴルフコース', rank: 4, elevation: 1059, access: 150, budget: 'ミドルレンジ', price: '平日1R:約15,600円~', quality: 4.2, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220006/', description: '名匠・井上誠一が絶賛した伊豆半島の最高峰に位置するリゾートコース。夏でも平均気温22℃という涼しさの中、原生林に囲まれた雄大なプレーが楽しめる。', expert_view: '「2時間以内」の基準をわずかに超えるが、井上誠一設計というブランドと伊豆ならではのリゾート体験は格別。1泊2日の滞在でその魅力を最大限に引き出せる。', concern: '都心からのアクセスが2時間半程度と、日帰りにはやや遠い。滞在型のゴルフ旅行としての計画がおすすめ。' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'fujimi_kogen', name: '富士見高原ゴルフコース', rank: 5, elevation: 1342, access: 120, budget: 'ミドルレンジ', price: '平日昼食付:約11,820円~', quality: 4.3, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/200060/', description: '標高1,300m超、夏の平均気温21℃という別格のアルペン体験。7,000ヤードを超える本格的なプレーヤーズ・コースで、正確なショットメイキングが要求される。', expert_view: '最高の涼しさと手応えのあるラウンドを求める真摯なゴルファー向け。移動時間を厭わなければ、その先には最高の報酬が待っている稀有な存在。', concern: 'アクセス時間が2時間と圏内ギリギリ。本格的な山岳コースのため、初心者にはタフなラウンドになることも。' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'asagiri_cc', name: '朝霧カントリークラブ', rank: 6, elevation: 962, access: 100, budget: 'プレミアム', price: '平日セルフ:約16,950円~', quality: 4.8, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220001/', description: '設計の巨匠、富沢誠造氏が手掛けた「風景画の中でプレーする」ようなコース。18ホールすべてから美しい富士山を仰ぎ見ることができ、圧倒的な開放感が魅力。', expert_view: 'GDOで4.9という驚異的な評価。他の追随を許さない「景観美」と「リゾート感」が根幹にある。特別な日のゴルフや、大切なゲストをもてなす場として最適。', concern: '価格帯はプレミアムクラス。景観の素晴らしさから人気が高く、予約が取りにくい場合がある。' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'jurigi_cc', name: '十里木カントリークラブ', rank: 7, elevation: 966, access: 117, budget: 'バリュー', price: '平日:約5,990円~', quality: 4.0, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220039/', description: '標高1,000m、都心より気温が10℃も低い「天空の避暑地」。広々とした丘陵コースで、初心者から上級者までリゾートゴルフの爽快感を満喫できる。', expert_view: '「涼しさ」という根源的な要求に最も忠実に応えるコース。絶対的な標高のアドバンテージと魅力的な価格設定が光る。平日の利用が賢明。', concern: 'その人気とコストパフォーマンスの良さから、特に週末は混雑する傾向があり、プレー進行が遅くなる可能性。' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'g8_fuji_cc', name: 'G8富士カントリークラブ', rank: 8, elevation: 765, access: 120, budget: 'バリュー', price: 'プランにより約10,000円前後~', quality: 3.6, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220023/', description: '富士山南面の穏やかな丘陵地に広がる18ホール。杉や檜でセパレートされ落ち着いた雰囲気。メリハリの効いたレイアウトが特徴。', expert_view: '「戦略的な面白さ」と「コストパフォーマンス」を両立させた隠れた名コース。予算を抑えつつ、コースの質には妥協したくない賢明なゴルファーに推薦。', concern: 'ランキング上位のコースと比較すると、品質スコアがやや低め。最新の設備やサービスを期待する方には物足りない部分も。' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'kawaguchiko_cc', name: '河口湖カントリークラブ', rank: 9, elevation: 967, access: 90, budget: 'ミドルレンジ', price: '平日:約15,070円~', quality: 4.0, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190011/', description: '霊峰富士の麓、自然と完璧に調和した全27ホールの名門コース。欧米の雰囲気が漂う洗練されたクラブハウスで、非日常の贅沢な時間が始まる。', expert_view: '真価はその「総合力」にある。27ホールという規模、名門としての品格、絶好のロケーションが高次元で融合。手応えのあるコースが挑戦意欲を掻き立てる。', concern: '名門コースゆえの風格があり、初心者にはやや敷居が高く感じられるかもしれない。価格もミドルレンジ以上。' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'otsuki_garden', name: '大月ガーデンゴルフクラブ', rank: 10, elevation: 725, access: 90, budget: 'バリュー', price: '平日:約5,990円~', quality: 3.7, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190034/', description: '卓越したアクセスとコストパフォーマンスのバランスでトップ10入り。英国貴族の館を彷彿とさせる壮麗なクラブハウスが特徴。', expert_view: 'まさに「コストパフォーマンスを極めた避暑地」。気軽に涼しいラウンドを楽しみたい、そんな衝動的な平日のゴルフに最適。高地ゴルフへの入門として非常に高い価値を提供。', concern: '標高がリスト内では比較的低いため、猛暑日には他の高標高コースほどの涼しさは期待できない可能性。' }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const shortCourses = [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'sc_fujiakamatsu', rank: 1, name: '富士赤松ゴルフコース', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520250/', description: '標高1,000mの涼しさ、ドライバーを存分に使える戦略性、そして信じがたいコストパフォーマンスを誇る。ショートコースカテゴリーの頂点に立つ、完璧なバランス。', expert_view: '「ゲーム全体」を凝縮して練習できるエグゼクティブコースの最高傑作の一つ。あらゆる目的に対して最高の答えを提示してくれる。', concern: 'コストパフォーマンスが非常に高いため人気があり、混雑することが予想される。', holes: '18H / P58', length: '2,629Y', driver: '可', price: '平日回り放題(昼食付):5,300円~' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'sc_takanenomori', rank: 2, name: '高嶺の森のゴルフクラブ', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520558/', description: '2021年オープンの新しい本格的ショートコース。総距離2,500ヤード超、パー4を2ホール含み、ドライバーをしっかり振れる。変化に富んだレイアウトが魅力。', expert_view: 'ショートコースの概念を覆すほどの「本格派」。ドライバーからウェッジまで、すべてのクラブを駆使する楽しみがある。本格的なゴルフ体験を求める層に強く推薦。', concern: '口コミによるとフェアウェイが狭めとの声もあり、正確性が求められるため、ショットが曲がりやすい初心者には難しい場面も。', holes: '18H / P56', length: '2,490Y', driver: '可', price: '平日1R:6,000円~' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'sc_tonohara', rank: 3, name: '殿原倶楽部', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520296/', description: '名設計家・赤星四郎氏が手掛けた本格派。最長240ヤードのパー4を含み、戦略性の高さがうかがえる。江連忠ゴルフスクール併設の「ゴルフ道場」。', expert_view: '本格的な設計と練習環境を求めるゴルファーに最適。本コースさながらの緊張感を持って練習に臨める。コストパフォーマンスにも優れる。', concern: 'バンカーなどハザードが巧みに配置されており、スコアメイクに苦しむ可能性がある。純粋な練習には良いが、初心者には手強い。', holes: '9H / P28', length: '1,323Y', driver: '可', price: '平日回り放題:3,500円' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'sc_ooya', rank: 4, name: '大谷ゴルフ場', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520222/', description: '駿河湾と静岡市街を一望できる景観豊かな18ホール。ショートコースでありながらドライバーが使用可能なパー4が存在し、より実践に近い練習が可能。', expert_view: '静岡エリアでドライバーを使える貴重なショートコース。併設の練習場からの流れはスキルアップに効率的。1人でのラウンドも歓迎。', concern: 'ドライバーが使えるホールは1つのみ。本格的なティーショットの練習には不向きかもしれない。', holes: '18H / P55', length: '2,023Y', driver: '可', price: '平日1R:3,200円~' },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>{ id: 'sc_fujigane', rank: 5, name: '富士ヶ嶺グリーンクラブ', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520300/', description: '標高1,200mに迫る屈指の高さを誇る。圧倒的な涼しさと絶景を、驚くほど手頃な価格で享受できる。アイアンショットとアプローチの精度を磨くのに理想的。', expert_view: 'まさに「純粋主義者のための練習天国」。ただひたすらに涼しい環境でアイアンプレーに打ち込みたいゴルファーにとって、これ以上の場所はない。', concern: 'ドライバー使用不可。支払いは現金のみ、手引きカートなど、シンプルな運営スタイルが合わない人もいるかも。', holes: '9H / P27', length: '1,002Y', driver: '不可', price: '9H:1,700円~' }</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// --- データ正規化関数 ---</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const normalizeData = (course) =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const accessScore = Math.max(1, Math.min(5, 5 - (course.access - 90) / 15));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const coolnessScore = Math.max(1, Math.min(5, (course.elevation - 600) / 200 + 1));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const budgetMap = { 'バリュー': 5, 'ミドルレンジ': 3, 'プレミアム': 1 };</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const budgetScore = budgetMap[course.budget] || 3;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const qualityScore = course.quality;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>return [accessScore, coolnessScore, budgetScore, qualityScore];</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>};</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">        </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// --- 初期化処理 ---</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>document.addEventListener('DOMContentLoaded', () =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const courseSelector = document.getElementById('course-selector');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const fullCourseRankingContainer = document.getElementById('full-course-ranking');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const shortCourseRankingContainer = document.getElementById('short-course-ranking');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const summaryFullCoursesContainer = document.getElementById('summary-full-courses');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const summaryShortCoursesContainer = document.getElementById('summary-short-courses');</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// 簡易ランキングを生成</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>fullCourses.forEach(course =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>summaryFullCoursesContainer.appendChild(createSummaryRankItem(course));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>shortCourses.forEach(course =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>summaryShortCoursesContainer.appendChild(createSummaryRankItem(course));</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// 詳細ランキングカードとチェックボックスを生成</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>fullCourses.forEach(course =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const div = document.createElement('div');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>div.className = 'flex items-center';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>div.innerHTML = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;input type="checkbox" id="${course.id}" value="${course.id}" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;label for="${course.id}" class="ml-2 block text-sm text-gray-900"&gt;${course.name}&lt;/label&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>courseSelector.appendChild(div);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const card = createCourseCard(course, 'teal');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>fullCourseRankingContainer.appendChild(card);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>shortCourses.forEach(course =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const card = createCourseCard(course, 'sky');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>shortCourseRankingContainer.appendChild(card);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>setupRadarChart();</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const initialCourses = fullCourses.slice(0, 3).map(c =&gt; c.id);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>initialCourses.forEach(id =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>document.getElementById(id).checked = true;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>updateRadarChart();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// --- 簡易ランキングアイテム生成関数 ---</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function createSummaryRankItem(course) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const li = document.createElement('li');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>li.className = 'flex items-center bg-white/50 p-2 rounded-lg';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let badgeClass = 'other';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (course.rank === 1) badgeClass = 'gold';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>else if (course.rank === 2) badgeClass = 'silver';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>else if (course.rank === 3) badgeClass = 'bronze';</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>li.innerHTML = `&lt;div class="rank-badge ${badgeClass}"&gt;${course.rank}&lt;/div&gt; &lt;span class="ml-3 font-semibold"&gt;${course.name}&lt;/span&gt;`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>return li;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// --- ランキングカード生成関数 ---</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function createCourseCard(course, color) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const card = document.createElement('div');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>card.className = `bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col`;</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let metricsHtml = '';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let rawDataHtml = '';</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// フルコース用のデータ表示</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (course.budget) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>const [accessScore, coolnessScore, budgetScore, qualityScore] = normalizeData(course);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>metricsHtml = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="mt-4 border-t border-gray-200 pt-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h5 class="text-sm font-bold text-gray-500 mb-3"&gt;評価指標スコア (5点満点)&lt;/h5&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span&gt;アクセス: &lt;strong class="text-lg text-${color}-700"&gt;${accessScore.toFixed(1)}&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span&gt;涼しさ: &lt;strong class="text-lg text-${color}-700"&gt;${coolnessScore.toFixed(1)}&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span&gt;予算: &lt;strong class="text-lg text-${color}-700"&gt;${budgetScore.toFixed(1)}&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span&gt;品質: &lt;strong class="text-lg text-${color}-700"&gt;${qualityScore.toFixed(1)}&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>rawDataHtml = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="mt-4 border-t border-gray-200 pt-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                         </span>&lt;h5 class="text-sm font-bold text-gray-500 mb-3"&gt;コースデータ詳細&lt;/h5&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                         </span>&lt;div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                             </span>&lt;span&gt;所要時間: &lt;strong class="text-lg text-gray-800"&gt;${course.access}分&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                             </span>&lt;span&gt;標高: &lt;strong class="text-lg text-gray-800"&gt;${course.elevation}m&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                             </span>&lt;span class="col-span-2"&gt;料金目安: &lt;strong class="text-lg text-gray-800"&gt;${course.price}&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                             </span>&lt;span&gt;口コミ: &lt;strong class="text-lg text-gray-800"&gt;${course.quality}点&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                         </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>// ショートコース用のデータ表示</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>else if (course.holes) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                 </span>rawDataHtml = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="mt-4 border-t border-gray-200 pt-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                         </span>&lt;h5 class="text-sm font-bold text-gray-500 mb-3"&gt;コースデータ詳細&lt;/h5&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                         </span>&lt;div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                             </span>&lt;span&gt;ホール: &lt;strong class="text-lg text-gray-800"&gt;${course.holes}&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                             </span>&lt;span&gt;総距離: &lt;strong class="text-lg text-gray-800"&gt;${course.length}&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                             </span>&lt;span class="col-span-2"&gt;料金目安: &lt;strong class="text-lg text-gray-800"&gt;${course.price}&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                             </span>&lt;span&gt;ドライバー: &lt;strong class="text-lg text-gray-800"&gt;${course.driver}&lt;/strong&gt;&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                         </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>let concernHtml = '';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>if (course.concern) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>concernHtml = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="mt-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                         </span>&lt;p class="text-sm text-amber-800 bg-amber-100 p-3 rounded-lg flex items-start"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span class="flex-shrink-0 mr-2 mt-0.5"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>&lt;svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"&gt;&lt;path fill-rule="evenodd" d="M8.257 3.099c.636-1.21 2.37-1.21 3.006 0l4.286 8.183c.63 1.202-.28 2.718-1.655 2.718H5.626c-1.375 0-2.285-1.516-1.655-2.718l4.286-8.183zM10 12a1 1 0 110-2 1 1 0 010 2zm-1-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"&gt;&lt;/path&gt;&lt;/svg&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>&lt;span&gt;&lt;strong&gt;懸念点:&lt;/strong&gt; ${course.concern}&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                         </span>&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>card.innerHTML = `</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="bg-${color}-600 text-white p-4"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex items-center"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;span class="flex-shrink-0 w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xl font-bold mr-4"&gt;${course.rank}&lt;/span&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;h4 class="text-xl font-bold"&gt;${course.name}&lt;/h4&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;div class="p-6 flex-grow flex flex-col"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;div class="flex-grow"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;p class="text-gray-600"&gt;${course.description}&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>&lt;p class="mt-4 text-sm text-${color}-800 bg-${color}-100 p-3 rounded-lg"&gt;&lt;strong&gt;エキスパートの視点:&lt;/strong&gt; ${course.expert_view}&lt;/p&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>${concernHtml}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>${metricsHtml}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>${rawDataHtml}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;a href="${course.url}" target="_blank" rel="noopener noreferrer" class="mt-6 block bg-${color}-600 hover:bg-${color}-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-center w-full"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>楽天GORAで詳細を見る</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>&lt;/a&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>`;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>return card;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// --- レーダーチャート関連 ---</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>let radarChart;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const chartColors = [</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>'rgba(20, 184, 166, 0.7)', 'rgba(234, 179, 8, 0.7)', 'rgba(239, 68, 68, 0.7)',</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>'rgba(59, 130, 246, 0.7)', 'rgba(139, 92, 246, 0.7)'</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>];</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function setupRadarChart() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const ctx = document.getElementById('radarChart').getContext('2d');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>radarChart = new Chart(ctx, {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>type: 'radar',</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>data: {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>labels: ['アクセス', '涼しさ(標高)', '予算', '品質'],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>datasets: []</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>},</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>options: {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>maintainAspectRatio: false,</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>scales: {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>r: {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>angleLines: { display: true },</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>suggestedMin: 0, suggestedMax: 5,</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>pointLabels: {<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>font: {<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                    </span>size: window.innerWidth &lt; 768 ? 11 : 14,</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                    </span>weight: 'bold'<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>}<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>},</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>ticks: {<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>stepSize: 1,<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>backdropColor: 'rgba(255, 255, 255, 0.75)'<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>},</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>plugins: {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>legend: {<span class="Apple-converted-space"> </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>position: 'top',</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>labels: {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>font: {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                    </span>size: window.innerWidth &lt; 768 ? 10 : 12</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>},</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>tooltip: {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>callbacks: {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                                </span>label: (context) =&gt; `${context.dataset.label || ''}: ${context.parsed.r.toFixed(2)}`</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                            </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>document.getElementById('course-selector').addEventListener('change', (e) =&gt; {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>if(e.target.type === 'checkbox') {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>if (document.querySelectorAll('#course-selector input:checked').length &gt; 5) {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>e.target.checked = false;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>alert('比較できるゴルフ場は5件までです。');</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>} else {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                        </span>updateRadarChart();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                    </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>});</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>function updateRadarChart() {</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const selectedIds = Array.from(document.querySelectorAll('#course-selector input:checked')).map(cb =&gt; cb.value);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>const selectedCourses = fullCourses.filter(course =&gt; selectedIds.includes(course.id));</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>radarChart.data.datasets = selectedCourses.map((course, index) =&gt; ({</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>label: course.name,</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>data: normalizeData(course),</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>backgroundColor: chartColors[index % chartColors.length].replace('0.7', '0.2'),</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>borderColor: chartColors[index % chartColors.length],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>pointBackgroundColor: chartColors[index % chartColors.length],</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>pointBorderColor: '#fff',</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>pointHoverBackgroundColor: '#fff',</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">                </span>pointHoverBorderColor: chartColors[index % chartColors.length]</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>}));</span></p>
-<p class="p2"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>radarChart.update();</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+<body class="text-gray-800">
+
+    <!-- ヘッダー -->
+    <header class="bg-teal-800 text-white p-8 md:p-16 rounded-b-3xl shadow-2xl">
+        <div class="bg-black bg-opacity-20 p-6 rounded-xl">
+            <h1 class="text-3xl md:text-5xl font-bold mb-2 text-shadow">ゴルフ場選定ガイド</h1>
+            <p class="text-lg md:text-2xl">都心から2時間圏内、猛暑を避けてゴルフを楽しむコースガイド</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <!-- ランキング一覧セクション -->
+        <section id="summary-ranking" class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700">ランキング一覧</h2>
+            <div class="glassmorphism p-6 rounded-2xl shadow-lg max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-center text-teal-700">フルコース Top 10</h3>
+                        <ol id="summary-full-courses" class="space-y-3 text-gray-800"></ol>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-center text-sky-700">ショートコース Top 5</h3>
+                        <ol id="summary-short-courses" class="space-y-3 text-gray-800"></ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 比較ツールセクション -->
+        <section id="comparison-tool" class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700">ゴルフ場 比較ツール</h2>
+            <div class="glassmorphism p-6 rounded-2xl shadow-lg">
+                <div class="mb-6">
+                    <h3 class="font-bold text-lg mb-4 text-center">比較したいフルコースを選択してください (最大5件)</h3>
+                    <div id="course-selector" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        <!-- チェックボックスはJSで動的に生成 -->
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 詳細ランキングセクション -->
+        <section id="ranking" class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-700">厳選ゴルフコース詳細</h2>
+            
+            <!-- フルコースランキング -->
+            <div class="mb-12">
+                <h3 class="text-xl md:text-2xl font-bold mb-6 text-center bg-teal-600 text-white py-3 rounded-lg shadow-md">フルコース10選</h3>
+                <div id="full-course-ranking" class="grid gap-6 md:grid-cols-2">
+                    <!-- ランキングカードはJSで動的に生成 -->
+                </div>
+            </div>
+
+            <!-- ショートコースランキング -->
+            <div>
+                <h3 class="text-xl md:text-2xl font-bold mb-6 text-center bg-sky-600 text-white py-3 rounded-lg shadow-md">ショートコース5選</h3>
+                <div id="short-course-ranking" class="grid gap-6 md:grid-cols-2">
+                    <!-- ランキングカードはJSで動的に生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- リサーチ方針セクション -->
+        <section id="research-policy" class="glassmorphism p-6 md:p-8 rounded-2xl shadow-lg">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700">リサーチ方針について</h2>
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div>
+                    <h3 class="text-xl font-bold mb-2 text-teal-700">我々の評価基準: 卓越性を測る4つの柱</h3>
+                    <p class="leading-relaxed">本レポートで紹介するゴルフコースは、以下の4つの評価軸に基づいて厳選、分析されています。これにより、読者は自身の価値観に最も合致した一軒を見つけ出すことが可能となります。</p>
+                    <ul class="list-disc list-inside mt-4 space-y-2">
+                        <li><strong>アクセス (Access):</strong> 単純な直線距離ではなく、都心(例:新宿)を起点とした現実的な所要時間を重視します。主要幹線道路の交通状況を考慮し、「2時間以内」という基準を設けています。</li>
+                        <li><strong>涼しさ (Coolness):</strong> 標高(メートル)と直接的に相関します。標高が100m上昇するごとに気温は約0.65℃低下すると言われ、標高1,000mのコースは平地より約6.5℃低い爽快な環境を提供します。</li>
+                        <li><strong>予算 (Budget):</strong> 平日および週末のグリーンフィーを実用的に案内します。各コースを「プレミアム」「ミドルレンジ」「バリュー」の3つの価格帯に分類し、予算に応じた選択をサポートします。</li>
+                        <li><strong>品質 (Quality):</strong> 楽天GORAやGDOといった主要な予約サイトのユーザーレビューを総合的に分析した複合スコアです。コースメンテナンス、戦略性、サービス、施設の充実度といった質的なフィードバックを評価に反映させています。</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-2 text-teal-700">データに関する注記</h3>
+                    <p class="leading-relaxed">ゴルフ場の標高やユーザー評価といったデータは、参照する情報源によって僅かな差異が見られる場合があります。本レポートでは、複数の情報を横断的に検証し、最も一貫性があり、最新であると判断された数値を採用しています。これにより、読者に提供する情報の正確性と信頼性を最大限に高めています。</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-4 mt-8 text-gray-500 text-sm">
+        <p>このウェブサイトは提供されたレポートに基づき作成されています。</p>
+    </footer>
+
+    <script>
+        // --- データ定義 ---
+        const fullCourses = [
+            { id: 'fuji_classic', name: '富士クラシック', rank: 1, elevation: 1193, access: 110, budget: 'プレミアム', price: '平日:約18,800円~', quality: 4.5, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190031/', description: '設計の鬼才デズモンド・ミュアヘッドが「富嶽三十六景」をモチーフにした芸術的コース。エリア最高クラスの標高を誇り、全ホールから雄大な富士山を望める圧倒的な景観が魅力。', expert_view: '「アクセス、涼しさ、予算、品質」の4軸を最も高次元で満たす。アートと自然が融合した空間は、スコアを競うだけでなく、ゴルフそのものを楽しむ「楽園」と言える。', concern: '価格帯はプレミアムクラス。独創的なレイアウトは初心者にはやや挑戦的に感じられる可能性も。' },
+            { id: 'narusawa_gc', name: '鳴沢ゴルフ倶楽部', rank: 2, elevation: 1046, access: 90, budget: 'プレミアム', price: '平日:20,000円台~', quality: 4.4, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190025/', description: '女子プロトーナメント開催実績が品質を物語る威厳に満ちたコース。自然の地形美を活かしたレイアウトと、超高難易度のグリーンが挑戦意欲を掻き立てる。', expert_view: '富士山麓エリアにおける「ゴルフの聖地」。単なるリラックスの場でなく、自らの技術と戦略を試す「挑戦の場」。最高の環境で最高の挑戦をしたいゴルファーのためのコース。', concern: '非常に高価格帯であり、グリーンの難易度は国内屈指。ジャケット着用必須など、格式の高さも特徴。' },
+            { id: 'forest_narusawa', name: 'フォレスト鳴沢ゴルフ&カントリークラブ', rank: 3, elevation: 1091, access: 90, budget: 'プレミアム', price: '週末午後:約20,820円~', quality: 4.6, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190028/', description: '赤松と白樺に囲まれた自然豊かな18ホール。特に食事の評価が群を抜いており、プレー以外の楽しみも豊富。卓越したホスピタリティが光る。', expert_view: '「総合的なリゾート体験」を求めるゴルファーに最適。コース、美食、洗練された雰囲気が揃い、特に女性からの支持が厚い。上質な一日を過ごしたいならここ以上はない。', concern: '価格はプレミアムクラス。人気が高いため、週末や良い時間帯の予約は早めが賢明。' },
+            { id: 'amagi_kogen', name: '天城高原ゴルフコース', rank: 4, elevation: 1059, access: 150, budget: 'ミドルレンジ', price: '平日1R:約15,600円~', quality: 4.2, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220006/', description: '名匠・井上誠一が絶賛した伊豆半島の最高峰に位置するリゾートコース。夏でも平均気温22℃という涼しさの中、原生林に囲まれた雄大なプレーが楽しめる。', expert_view: '「2時間以内」の基準をわずかに超えるが、井上誠一設計というブランドと伊豆ならではのリゾート体験は格別。1泊2日の滞在でその魅力を最大限に引き出せる。', concern: '都心からのアクセスが2時間半程度と、日帰りにはやや遠い。滞在型のゴルフ旅行としての計画がおすすめ。' },
+            { id: 'fujimi_kogen', name: '富士見高原ゴルフコース', rank: 5, elevation: 1342, access: 120, budget: 'ミドルレンジ', price: '平日昼食付:約11,820円~', quality: 4.3, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/200060/', description: '標高1,300m超、夏の平均気温21℃という別格のアルペン体験。7,000ヤードを超える本格的なプレーヤーズ・コースで、正確なショットメイキングが要求される。', expert_view: '最高の涼しさと手応えのあるラウンドを求める真摯なゴルファー向け。移動時間を厭わなければ、その先には最高の報酬が待っている稀有な存在。', concern: 'アクセス時間が2時間と圏内ギリギリ。本格的な山岳コースのため、初心者にはタフなラウンドになることも。' },
+            { id: 'asagiri_cc', name: '朝霧カントリークラブ', rank: 6, elevation: 962, access: 100, budget: 'プレミアム', price: '平日セルフ:約16,950円~', quality: 4.8, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220001/', description: '設計の巨匠、富沢誠造氏が手掛けた「風景画の中でプレーする」ようなコース。18ホールすべてから美しい富士山を仰ぎ見ることができ、圧倒的な開放感が魅力。', expert_view: 'GDOで4.9という驚異的な評価。他の追随を許さない「景観美」と「リゾート感」が根幹にある。特別な日のゴルフや、大切なゲストをもてなす場として最適。', concern: '価格帯はプレミアムクラス。景観の素晴らしさから人気が高く、予約が取りにくい場合がある。' },
+            { id: 'jurigi_cc', name: '十里木カントリークラブ', rank: 7, elevation: 966, access: 117, budget: 'バリュー', price: '平日:約5,990円~', quality: 4.0, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220039/', description: '標高1,000m、都心より気温が10℃も低い「天空の避暑地」。広々とした丘陵コースで、初心者から上級者までリゾートゴルフの爽快感を満喫できる。', expert_view: '「涼しさ」という根源的な要求に最も忠実に応えるコース。絶対的な標高のアドバンテージと魅力的な価格設定が光る。平日の利用が賢明。', concern: 'その人気とコストパフォーマンスの良さから、特に週末は混雑する傾向があり、プレー進行が遅くなる可能性。' },
+            { id: 'g8_fuji_cc', name: 'G8富士カントリークラブ', rank: 8, elevation: 765, access: 120, budget: 'バリュー', price: 'プランにより約10,000円前後~', quality: 3.6, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220023/', description: '富士山南面の穏やかな丘陵地に広がる18ホール。杉や檜でセパレートされ落ち着いた雰囲気。メリハリの効いたレイアウトが特徴。', expert_view: '「戦略的な面白さ」と「コストパフォーマンス」を両立させた隠れた名コース。予算を抑えつつ、コースの質には妥協したくない賢明なゴルファーに推薦。', concern: 'ランキング上位のコースと比較すると、品質スコアがやや低め。最新の設備やサービスを期待する方には物足りない部分も。' },
+            { id: 'kawaguchiko_cc', name: '河口湖カントリークラブ', rank: 9, elevation: 967, access: 90, budget: 'ミドルレンジ', price: '平日:約15,070円~', quality: 4.0, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190011/', description: '霊峰富士の麓、自然と完璧に調和した全27ホールの名門コース。欧米の雰囲気が漂う洗練されたクラブハウスで、非日常の贅沢な時間が始まる。', expert_view: '真価はその「総合力」にある。27ホールという規模、名門としての品格、絶好のロケーションが高次元で融合。手応えのあるコースが挑戦意欲を掻き立てる。', concern: '名門コースゆえの風格があり、初心者にはやや敷居が高く感じられるかもしれない。価格もミドルレンジ以上。' },
+            { id: 'otsuki_garden', name: '大月ガーデンゴルフクラブ', rank: 10, elevation: 725, access: 90, budget: 'バリュー', price: '平日:約5,990円~', quality: 3.7, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190034/', description: '卓越したアクセスとコストパフォーマンスのバランスでトップ10入り。英国貴族の館を彷彿とさせる壮麗なクラブハウスが特徴。', expert_view: 'まさに「コストパフォーマンスを極めた避暑地」。気軽に涼しいラウンドを楽しみたい、そんな衝動的な平日のゴルフに最適。高地ゴルフへの入門として非常に高い価値を提供。', concern: '標高がリスト内では比較的低いため、猛暑日には他の高標高コースほどの涼しさは期待できない可能性。' }
+        ];
+
+        const shortCourses = [
+            { id: 'sc_fujiakamatsu', rank: 1, name: '富士赤松ゴルフコース', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520250/', description: '標高1,000mの涼しさ、ドライバーを存分に使える戦略性、そして信じがたいコストパフォーマンスを誇る。ショートコースカテゴリーの頂点に立つ、完璧なバランス。', expert_view: '「ゲーム全体」を凝縮して練習できるエグゼクティブコースの最高傑作の一つ。あらゆる目的に対して最高の答えを提示してくれる。', concern: 'コストパフォーマンスが非常に高いため人気があり、混雑することが予想される。', holes: '18H / P58', length: '2,629Y', driver: '可', price: '平日回り放題(昼食付):5,300円~' },
+            { id: 'sc_takanenomori', rank: 2, name: '高嶺の森のゴルフクラブ', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520558/', description: '2021年オープンの新しい本格的ショートコース。総距離2,500ヤード超、パー4を2ホール含み、ドライバーをしっかり振れる。変化に富んだレイアウトが魅力。', expert_view: 'ショートコースの概念を覆すほどの「本格派」。ドライバーからウェッジまで、すべてのクラブを駆使する楽しみがある。本格的なゴルフ体験を求める層に強く推薦。', concern: '口コミによるとフェアウェイが狭めとの声もあり、正確性が求められるため、ショットが曲がりやすい初心者には難しい場面も。', holes: '18H / P56', length: '2,490Y', driver: '可', price: '平日1R:6,000円~' },
+            { id: 'sc_tonohara', rank: 3, name: '殿原倶楽部', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520296/', description: '名設計家・赤星四郎氏が手掛けた本格派。最長240ヤードのパー4を含み、戦略性の高さがうかがえる。江連忠ゴルフスクール併設の「ゴルフ道場」。', expert_view: '本格的な設計と練習環境を求めるゴルファーに最適。本コースさながらの緊張感を持って練習に臨める。コストパフォーマンスにも優れる。', concern: 'バンカーなどハザードが巧みに配置されており、スコアメイクに苦しむ可能性がある。純粋な練習には良いが、初心者には手強い。', holes: '9H / P28', length: '1,323Y', driver: '可', price: '平日回り放題:3,500円' },
+            { id: 'sc_ooya', rank: 4, name: '大谷ゴルフ場', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520222/', description: '駿河湾と静岡市街を一望できる景観豊かな18ホール。ショートコースでありながらドライバーが使用可能なパー4が存在し、より実践に近い練習が可能。', expert_view: '静岡エリアでドライバーを使える貴重なショートコース。併設の練習場からの流れはスキルアップに効率的。1人でのラウンドも歓迎。', concern: 'ドライバーが使えるホールは1つのみ。本格的なティーショットの練習には不向きかもしれない。', holes: '18H / P55', length: '2,023Y', driver: '可', price: '平日1R:3,200円~' },
+            { id: 'sc_fujigane', rank: 5, name: '富士ヶ嶺グリーンクラブ', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520300/', description: '標高1,200mに迫る屈指の高さを誇る。圧倒的な涼しさと絶景を、驚くほど手頃な価格で享受できる。アイアンショットとアプローチの精度を磨くのに理想的。', expert_view: 'まさに「純粋主義者のための練習天国」。ただひたすらに涼しい環境でアイアンプレーに打ち込みたいゴルファーにとって、これ以上の場所はない。', concern: 'ドライバー使用不可。支払いは現金のみ、手引きカートなど、シンプルな運営スタイルが合わない人もいるかも。', holes: '9H / P27', length: '1,002Y', driver: '不可', price: '9H:1,700円~' }
+        ];
+
+        // --- データ正規化関数 ---
+        const normalizeData = (course) => {
+            const accessScore = Math.max(1, Math.min(5, 5 - (course.access - 90) / 15));
+            const coolnessScore = Math.max(1, Math.min(5, (course.elevation - 600) / 200 + 1));
+            const budgetMap = { 'バリュー': 5, 'ミドルレンジ': 3, 'プレミアム': 1 };
+            const budgetScore = budgetMap[course.budget] || 3;
+            const qualityScore = course.quality;
+            return [accessScore, coolnessScore, budgetScore, qualityScore];
+        };
+        
+        // --- 初期化処理 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const courseSelector = document.getElementById('course-selector');
+            const fullCourseRankingContainer = document.getElementById('full-course-ranking');
+            const shortCourseRankingContainer = document.getElementById('short-course-ranking');
+            const summaryFullCoursesContainer = document.getElementById('summary-full-courses');
+            const summaryShortCoursesContainer = document.getElementById('summary-short-courses');
+            
+            // 簡易ランキングを生成
+            fullCourses.forEach(course => {
+                summaryFullCoursesContainer.appendChild(createSummaryRankItem(course));
+            });
+            shortCourses.forEach(course => {
+                summaryShortCoursesContainer.appendChild(createSummaryRankItem(course));
+            });
+
+            // 詳細ランキングカードとチェックボックスを生成
+            fullCourses.forEach(course => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center';
+                div.innerHTML = `
+                    <input type="checkbox" id="${course.id}" value="${course.id}" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                    <label for="${course.id}" class="ml-2 block text-sm text-gray-900">${course.name}</label>
+                `;
+                courseSelector.appendChild(div);
+                const card = createCourseCard(course, 'teal');
+                fullCourseRankingContainer.appendChild(card);
+            });
+
+            shortCourses.forEach(course => {
+                const card = createCourseCard(course, 'sky');
+                shortCourseRankingContainer.appendChild(card);
+            });
+
+            setupRadarChart();
+            
+            const initialCourses = fullCourses.slice(0, 3).map(c => c.id);
+            initialCourses.forEach(id => {
+                document.getElementById(id).checked = true;
+            });
+            updateRadarChart();
+        });
+
+        // --- 簡易ランキングアイテム生成関数 ---
+        function createSummaryRankItem(course) {
+            const li = document.createElement('li');
+            li.className = 'flex items-center bg-white/50 p-2 rounded-lg';
+            let badgeClass = 'other';
+            if (course.rank === 1) badgeClass = 'gold';
+            else if (course.rank === 2) badgeClass = 'silver';
+            else if (course.rank === 3) badgeClass = 'bronze';
+            
+            li.innerHTML = `<div class="rank-badge ${badgeClass}">${course.rank}</div> <span class="ml-3 font-semibold">${course.name}</span>`;
+            return li;
+        }
+
+        // --- ランキングカード生成関数 ---
+        function createCourseCard(course, color) {
+            const card = document.createElement('div');
+            card.className = `bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col`;
+            
+            let metricsHtml = '';
+            let rawDataHtml = '';
+
+            // フルコース用のデータ表示
+            if (course.budget) {
+                const [accessScore, coolnessScore, budgetScore, qualityScore] = normalizeData(course);
+                metricsHtml = `
+                    <div class="mt-4 border-t border-gray-200 pt-4">
+                        <h5 class="text-sm font-bold text-gray-500 mb-3">評価指標スコア (5点満点)</h5>
+                        <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700">
+                            <span>アクセス: <strong class="text-lg text-${color}-700">${accessScore.toFixed(1)}</strong></span>
+                            <span>涼しさ: <strong class="text-lg text-${color}-700">${coolnessScore.toFixed(1)}</strong></span>
+                            <span>予算: <strong class="text-lg text-${color}-700">${budgetScore.toFixed(1)}</strong></span>
+                            <span>品質: <strong class="text-lg text-${color}-700">${qualityScore.toFixed(1)}</strong></span>
+                        </div>
+                    </div>
+                `;
+                rawDataHtml = `
+                    <div class="mt-4 border-t border-gray-200 pt-4">
+                         <h5 class="text-sm font-bold text-gray-500 mb-3">コースデータ詳細</h5>
+                         <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700">
+                             <span>所要時間: <strong class="text-lg text-gray-800">${course.access}分</strong></span>
+                             <span>標高: <strong class="text-lg text-gray-800">${course.elevation}m</strong></span>
+                             <span class="col-span-2">料金目安: <strong class="text-lg text-gray-800">${course.price}</strong></span>
+                             <span>口コミ: <strong class="text-lg text-gray-800">${course.quality}点</strong></span>
+                         </div>
+                    </div>
+                `;
+            } 
+            // ショートコース用のデータ表示
+            else if (course.holes) {
+                 rawDataHtml = `
+                    <div class="mt-4 border-t border-gray-200 pt-4">
+                         <h5 class="text-sm font-bold text-gray-500 mb-3">コースデータ詳細</h5>
+                         <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700">
+                             <span>ホール: <strong class="text-lg text-gray-800">${course.holes}</strong></span>
+                             <span>総距離: <strong class="text-lg text-gray-800">${course.length}</strong></span>
+                             <span class="col-span-2">料金目安: <strong class="text-lg text-gray-800">${course.price}</strong></span>
+                             <span>ドライバー: <strong class="text-lg text-gray-800">${course.driver}</strong></span>
+                         </div>
+                    </div>
+                `;
+            }
+
+            let concernHtml = '';
+            if (course.concern) {
+                concernHtml = `
+                    <div class="mt-4">
+                         <p class="text-sm text-amber-800 bg-amber-100 p-3 rounded-lg flex items-start">
+                            <span class="flex-shrink-0 mr-2 mt-0.5">
+                                <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8.257 3.099c.636-1.21 2.37-1.21 3.006 0l4.286 8.183c.63 1.202-.28 2.718-1.655 2.718H5.626c-1.375 0-2.285-1.516-1.655-2.718l4.286-8.183zM10 12a1 1 0 110-2 1 1 0 010 2zm-1-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+                            </span>
+                            <span><strong>懸念点:</strong> ${course.concern}</span>
+                         </p>
+                    </div>
+                `;
+            }
+
+            card.innerHTML = `
+                <div class="bg-${color}-600 text-white p-4">
+                    <div class="flex items-center">
+                        <span class="flex-shrink-0 w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-xl font-bold mr-4">${course.rank}</span>
+                        <h4 class="text-xl font-bold">${course.name}</h4>
+                    </div>
+                </div>
+                <div class="p-6 flex-grow flex flex-col">
+                    <div class="flex-grow">
+                        <p class="text-gray-600">${course.description}</p>
+                        <p class="mt-4 text-sm text-${color}-800 bg-${color}-100 p-3 rounded-lg"><strong>エキスパートの視点:</strong> ${course.expert_view}</p>
+                        ${concernHtml}
+                        ${metricsHtml}
+                        ${rawDataHtml}
+                    </div>
+                    <a href="${course.url}" target="_blank" rel="noopener noreferrer" class="mt-6 block bg-${color}-600 hover:bg-${color}-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-center w-full">
+                        楽天GORAで詳細を見る
+                    </a>
+                </div>
+            `;
+            return card;
+        }
+
+        // --- レーダーチャート関連 ---
+        let radarChart;
+        const chartColors = [
+            'rgba(20, 184, 166, 0.7)', 'rgba(234, 179, 8, 0.7)', 'rgba(239, 68, 68, 0.7)',
+            'rgba(59, 130, 246, 0.7)', 'rgba(139, 92, 246, 0.7)'
+        ];
+
+        function setupRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['アクセス', '涼しさ(標高)', '予算', '品質'],
+                    datasets: []
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0, suggestedMax: 5,
+                            pointLabels: { 
+                                font: { 
+                                    size: window.innerWidth < 768 ? 11 : 14,
+                                    weight: 'bold' 
+                                } 
+                            },
+                            ticks: { 
+                                stepSize: 1, 
+                                backdropColor: 'rgba(255, 255, 255, 0.75)' 
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { 
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.dataset.label || ''}: ${context.parsed.r.toFixed(2)}`
+                            }
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('course-selector').addEventListener('change', (e) => {
+                if(e.target.type === 'checkbox') {
+                    if (document.querySelectorAll('#course-selector input:checked').length > 5) {
+                        e.target.checked = false;
+                        alert('比較できるゴルフ場は5件までです。');
+                    } else {
+                        updateRadarChart();
+                    }
+                }
+            });
+        }
+
+        function updateRadarChart() {
+            const selectedIds = Array.from(document.querySelectorAll('#course-selector input:checked')).map(cb => cb.value);
+            const selectedCourses = fullCourses.filter(course => selectedIds.includes(course.id));
+            
+            radarChart.data.datasets = selectedCourses.map((course, index) => ({
+                label: course.name,
+                data: normalizeData(course),
+                backgroundColor: chartColors[index % chartColors.length].replace('0.7', '0.2'),
+                borderColor: chartColors[index % chartColors.length],
+                pointBackgroundColor: chartColors[index % chartColors.length],
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: chartColors[index % chartColors.length]
+            }));
+            
+            radarChart.update();
+        }
+    </script>
 </body>
 </html>
