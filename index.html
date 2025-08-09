@@ -53,12 +53,16 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        /* スマートフォン用のスタイル */
         @media (max-width: 768px) {
             .chart-container {
-                height: 85vw;
-                max-height: 450px;
+                height: 85vw; /* グラフの高さを画面幅に合わせる */
+                max-height: 450px; /* 高くなりすぎないように最大値を設定 */
             }
         }
+        /* TailwindCSS Aspect Ratio Plugin Fallback */
+        .aspect-w-16 { position: relative; padding-bottom: 56.25%; }
+        .aspect-h-9 > * { position: absolute; height: 100%; width: 100%; top: 0; right: 0; bottom: 0; left: 0; }
     </style>
 </head>
 <body class="text-gray-800">
@@ -78,29 +82,26 @@
                 <div class="grid md:grid-cols-2 gap-x-8 gap-y-6">
                     <div>
                         <h3 class="text-xl font-bold mb-4 text-center text-teal-700">フルコース Top 10</h3>
-                        <ol id="summary-full-courses" class="space-y-3 text-gray-800">
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge gold">1</div> <span class="ml-3 font-semibold">富士クラシック</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge silver">2</div> <span class="ml-3 font-semibold">鳴沢ゴルフ倶楽部</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge bronze">3</div> <span class="ml-3 font-semibold">フォレスト鳴沢ゴルフ&カントリークラブ</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge other">4</div> <span class="ml-3 font-semibold">天城高原ゴルフコース</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge other">5</div> <span class="ml-3 font-semibold">富士見高原ゴルフコース</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge other">6</div> <span class="ml-3 font-semibold">朝霧カントリークラブ</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge other">7</div> <span class="ml-3 font-semibold">十里木カントリークラブ</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge other">8</div> <span class="ml-3 font-semibold">G8富士カントリークラブ</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge other">9</div> <span class="ml-3 font-semibold">河口湖カントリークラブ</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge other">10</div> <span class="ml-3 font-semibold">大月ガーデンゴルフクラブ</span></li>
-                        </ol>
+                        <ol id="summary-full-courses" class="space-y-3 text-gray-800"></ol>
                     </div>
                     <div>
                         <h3 class="text-xl font-bold mb-4 text-center text-sky-700">ショートコース Top 5</h3>
-                        <ol id="summary-short-courses" class="space-y-3 text-gray-800">
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge gold">1</div> <span class="ml-3 font-semibold">富士赤松ゴルフコース</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge silver">2</div> <span class="ml-3 font-semibold">高嶺の森のゴルフクラブ</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge bronze">3</div> <span class="ml-3 font-semibold">殿原倶楽部</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge other">4</div> <span class="ml-3 font-semibold">大谷ゴルフ場</span></li>
-                            <li class="flex items-center bg-white/50 p-2 rounded-lg"><div class="rank-badge other">5</div> <span class="ml-3 font-semibold">富士ヶ嶺グリーンクラブ</span></li>
-                        </ol>
+                        <ol id="summary-short-courses" class="space-y-3 text-gray-800"></ol>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison-tool" class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700">ゴルフ場 比較ツール</h2>
+            <div class="glassmorphism p-6 rounded-2xl shadow-lg">
+                <div class="mb-6">
+                    <h3 class="font-bold text-lg mb-4 text-center">比較したいフルコースを選択してください (最大5件)</h3>
+                    <div id="course-selector" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="radarChart"></canvas>
                 </div>
             </div>
         </section>
@@ -121,30 +122,56 @@
             </div>
         </section>
 
+        <section id="research-policy" class="glassmorphism p-6 md:p-8 rounded-2xl shadow-lg">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700">リサーチ方針について</h2>
+            <div class="max-w-4xl mx-auto space-y-6">
+                <div>
+                    <h3 class="text-xl font-bold mb-2 text-teal-700">我々の評価基準: 卓越性を測る4つの柱</h3>
+                    <p class="leading-relaxed">本レポートで紹介するゴルフコースは、以下の4つの評価軸に基づいて厳選、分析されています。これにより、読者は自身の価値観に最も合致した一軒を見つけ出すことが可能となります。</p>
+                    <ul class="list-disc list-inside mt-4 space-y-2">
+                        <li><strong>アクセス (Access):</strong> 単純な直線距離ではなく、都心(例:新宿)を起点とした現実的な所要時間を重視します。主要幹線道路の交通状況を考慮し、「2時間以内」という基準を設けています。</li>
+                        <li><strong>涼しさ (Coolness):</strong> 標高(メートル)と直接的に相関します。標高が100m上昇するごとに気温は約0.65℃低下すると言われ、標高1,000mのコースは平地より約6.5℃低い爽快な環境を提供します。</li>
+                        <li><strong>予算 (Budget):</strong> 平日および週末のグリーンフィーを実用的に案内します。各コースを「プレミアム」「ミドルレンジ」「バリュー」の3つの価格帯に分類し、予算に応じた選択をサポートします。</li>
+                        <li><strong>品質 (Quality):</strong> 楽天GORAやGDOといった主要な予約サイトのユーザーレビューを総合的に分析した複合スコアです。コースメンテナンス、戦略性、サービス、施設の充実度といった質的なフィードバックを評価に反映させています。</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold mb-2 text-teal-700">データに関する注記</h3>
+                    <p class="leading-relaxed">ゴルフ場の標高やユーザー評価といったデータは、参照する情報源によって僅かな差異が見られる場合があります。本レポートでは、複数の情報を横断的に検証し、最も一貫性があり、最新であると判断された数値を採用しています。これにより、読者に提供する情報の正確性と信頼性を最大限に高めています。</p>
+                </div>
+            </div>
+        </section>
+
     </main>
-    
+
+    <footer class="text-center p-4 mt-8 text-gray-500 text-sm">
+        <p>このウェブサイトは提供されたレポートに基づき作成されています。</p>
+    </footer>
+
     <script>
+        // --- データ定義 ---
         const fullCourses = [
-            { id: 'fuji_classic', name: '富士クラシック', rank: 1, elevation: 1193, access: 110, budget: 'プレミアム', price: '平日:約18,800円~', quality: 4.5, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190031/', description: '設計の鬼才デズモンド・ミュアヘッドが「富嶽三十六景」をモチーフにした芸術的コース。エリア最高クラスの標高を誇り、全ホールから雄大な富士山を望める圧倒的な景観が魅力。', expert_view: '「アクセス、涼しさ、予算、品質」の4軸を最も高次元で満たす。アートと自然が融合した空間は、スコアを競うだけでなく、ゴルフそのものを楽しむ「楽園」と言える。', concern: '価格帯はプレミアムクラス。独創的なレイアウトは初心者にはやや挑戦的に感じられる可能性も。' },
-            { id: 'narusawa_gc', name: '鳴沢ゴルフ倶楽部', rank: 2, elevation: 1046, access: 90, budget: 'プレミアム', price: '平日:20,000円台~', quality: 4.4, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190025/', description: '女子プロトーナメント開催実績が品質を物語る威厳に満ちたコース。自然の地形美を活かしたレイアウトと、超高難易度のグリーンが挑戦意欲を掻き立てる。', expert_view: '富士山麓エリアにおける「ゴルフの聖地」。単なるリラックスの場でなく、自らの技術と戦略を試す「挑戦の場」。最高の環境で最高の挑戦をしたいゴルファーのためのコース。', concern: '非常に高価格帯であり、グリーンの難易度は国内屈指。ジャケット着用必須など、格式の高さも特徴。' },
-            { id: 'forest_narusawa', name: 'フォレスト鳴沢ゴルフ&カントリークラブ', rank: 3, elevation: 1091, access: 90, budget: 'プレミアム', price: '週末午後:約20,820円~', quality: 4.6, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190028/', description: '赤松と白樺に囲まれた自然豊かな18ホール。特に食事の評価が群を抜いており、プレー以外の楽しみも豊富。卓越したホスピタリティが光る。', expert_view: '「総合的なリゾート体験」を求めるゴルファーに最適。コース、美食、洗練された雰囲気が揃い、特に女性からの支持が厚い。上質な一日を過ごしたいならここ以上はない。', concern: '価格はプレミアムクラス。人気が高いため、週末や良い時間帯の予約は早めが賢明。' },
-            { id: 'amagi_kogen', name: '天城高原ゴルフコース', rank: 4, elevation: 1059, access: 150, budget: 'ミドルレンジ', price: '平日1R:約15,600円~', quality: 4.2, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220006/', description: '名匠・井上誠一が絶賛した伊豆半島の最高峰に位置するリゾートコース。夏でも平均気温22℃という涼しさの中、原生林に囲まれた雄大なプレーが楽しめる。', expert_view: '「2時間以内」の基準をわずかに超えるが、井上誠一設計というブランドと伊豆ならではのリゾート体験は格別。1泊2日の滞在でその魅力を最大限に引き出せる。', concern: '都心からのアクセスが2時間半程度と、日帰りにはやや遠い。滞在型のゴルフ旅行としての計画がおすすめ。' },
-            { id: 'fujimi_kogen', name: '富士見高原ゴルフコース', rank: 5, elevation: 1342, access: 120, budget: 'ミドルレンジ', price: '平日昼食付:約11,820円~', quality: 4.3, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/200060/', description: '標高1,300m超、夏の平均気温21℃という別格のアルペン体験。7,000ヤードを超える本格的なプレーヤーズ・コースで、正確なショットメイキングが要求される。', expert_view: '最高の涼しさと手応えのあるラウンドを求める真摯なゴルファー向け。移動時間を厭わなければ、その先には最高の報酬が待っている稀有な存在。', concern: 'アクセス時間が2時間と圏内ギリギリ。本格的な山岳コースのため、初心者にはタフなラウンドになることも。' },
-            { id: 'asagiri_cc', name: '朝霧カントリークラブ', rank: 6, elevation: 962, access: 100, budget: 'プレミアム', price: '平日セルフ:約16,950円~', quality: 4.8, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220001/', description: '設計の巨匠、富沢誠造氏が手掛けた「風景画の中でプレーする」ようなコース。18ホールすべてから美しい富士山を仰ぎ見ることができ、圧倒的な開放感が魅力。', expert_view: 'GDOで4.9という驚異的な評価。他の追随を許さない「景観美」と「リゾート感」が根幹にある。特別な日のゴルフや、大切なゲストをもてなす場として最適。', concern: '価格帯はプレミアムクラス。景観の素晴らしさから人気が高く、予約が取りにくい場合がある。' },
-            { id: 'jurigi_cc', name: '十里木カントリークラブ', rank: 7, elevation: 966, access: 117, budget: 'バリュー', price: '平日:約5,990円~', quality: 4.0, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220039/', description: '標高1,000m、都心より気温が10℃も低い「天空の避暑地」。広々とした丘陵コースで、初心者から上級者までリゾートゴルフの爽快感を満喫できる。', expert_view: '「涼しさ」という根源的な要求に最も忠実に応えるコース。絶対的な標高のアドバンテージと魅力的な価格設定が光る。平日の利用が賢明。', concern: 'その人気とコストパフォーマンスの良さから、特に週末は混雑する傾向があり、プレー進行が遅くなる可能性。' },
-            { id: 'g8_fuji_cc', name: 'G8富士カントリークラブ', rank: 8, elevation: 765, access: 120, budget: 'バリュー', price: 'プランにより約10,000円前後~', quality: 3.6, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220023/', description: '富士山南面の穏やかな丘陵地に広がる18ホール。杉や檜でセパレートされ落ち着いた雰囲気。メリハリの効いたレイアウトが特徴。', expert_view: '「戦略的な面白さ」と「コストパフォーマンス」を両立させた隠れた名コース。予算を抑えつつ、コースの質には妥協したくない賢明なゴルファーに推薦。', concern: 'ランキング上位のコースと比較すると、品質スコアがやや低め。最新の設備やサービスを期待する方には物足りない部分も。' },
-            { id: 'kawaguchiko_cc', name: '河口湖カントリークラブ', rank: 9, elevation: 967, access: 90, budget: 'ミドルレンジ', price: '平日:約15,070円~', quality: 4.0, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190011/', description: '霊峰富士の麓、自然と完璧に調和した全27ホールの名門コース。欧米の雰囲気が漂う洗練されたクラブハウスで、非日常の贅沢な時間が始まる。', expert_view: '真価はその「総合力」にある。27ホールという規模、名門としての品格、絶好のロケーションが高次元で融合。手応えのあるコースが挑戦意欲を掻き立てる。', concern: '名門コースゆえの風格があり、初心者にはやや敷居が高く感じられるかもしれない。価格もミドルレンジ以上。' },
-            { id: 'otsuki_garden', name: '大月ガーデンゴルフクラブ', rank: 10, elevation: 725, access: 90, budget: 'バリュー', price: '平日:約5,990円~', quality: 3.7, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190034/', description: '卓越したアクセスとコストパフォーマンスのバランスでトップ10入り。英国貴族の館を彷彿とさせる壮麗なクラブハウスが特徴。', expert_view: 'まさに「コストパフォーマンスを極めた避暑地」。気軽に涼しいラウンドを楽しみたい、そんな衝動的な平日のゴルフに最適。高地ゴルフへの入門として非常に高い価値を提供。', concern: '標高がリスト内では比較的低いため、猛暑日には他の高標高コースほどの涼しさは期待できない可能性。' }
+            { id: 'fuji_classic', name: '富士クラシック', rank: 1, elevation: 1193, access: 110, budget: 'プレミアム', price: '平日:約18,800円~', quality: 4.5, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190031/', description: '設計の鬼才デズモンド・ミュアヘッドが「富嶽三十六景」をモチーフにした芸術的コース。エリア最高クラスの標高を誇り、全ホールから雄大な富士山を望める圧倒的な景観が魅力。', expert_view: '「アクセス、涼しさ、予算、品質」の4軸を最も高次元で満たす。アートと自然が融合した空間は、スコアを競うだけでなく、ゴルフそのものを楽しむ「楽園」と言える。', concern: '価格帯はプレミアムクラス。独創的なレイアウトは初心者にはやや挑戦的に感じられる可能性も。', address: '〒401-0338 山梨県南都留郡富士河口湖町富士ヶ嶺2-2' },
+            { id: 'narusawa_gc', name: '鳴沢ゴルフ倶楽部', rank: 2, elevation: 1046, access: 90, budget: 'プレミアム', price: '平日:20,000円台~', quality: 4.4, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190025/', description: '女子プロトーナメント開催実績が品質を物語る威厳に満ちたコース。自然の地形美を活かしたレイアウトと、超高難易度のグリーンが挑戦意欲を掻き立てる。', expert_view: '富士山麓エリアにおける「ゴルフの聖地」。単なるリラックスの場でなく、自らの技術と戦略を試す「挑戦の場」。最高の環境で最高の挑戦をしたいゴルファーのためのコース。', concern: '非常に高価格帯であり、グリーンの難易度は国内屈指。ジャケット着用必須など、格式の高さも特徴。', address: '〒401-0320 山梨県南都留郡鳴沢村5224' },
+            { id: 'forest_narusawa', name: 'フォレスト鳴沢ゴルフ&カントリークラブ', rank: 3, elevation: 1091, access: 90, budget: 'プレミアム', price: '週末午後:約20,820円~', quality: 4.6, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190028/', description: '赤松と白樺に囲まれた自然豊かな18ホール。特に食事の評価が群を抜いており、プレー以外の楽しみも豊富。卓越したホスピタリティが光る。', expert_view: '「総合的なリゾート体験」を求めるゴルファーに最適。コース、美食、洗練された雰囲気が揃い、特に女性からの支持が厚い。上質な一日を過ごしたいならここ以上はない。', concern: '価格はプレミアムクラス。人気が高いため、週末や良い時間帯の予約は早めが賢明。', address: '〒401-0320 山梨県南都留郡鳴沢村7328-41' },
+            { id: 'amagi_kogen', name: '天城高原ゴルフコース', rank: 4, elevation: 1059, access: 150, budget: 'ミドルレンジ', price: '平日1R:約15,600円~', quality: 4.2, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220006/', description: '名匠・井上誠一が絶賛した伊豆半島の最高峰に位置するリゾートコース。夏でも平均気温22℃という涼しさの中、原生林に囲まれた雄大なプレーが楽しめる。', expert_view: '「2時間以内」の基準をわずかに超えるが、井上誠一設計というブランドと伊豆ならではのリゾート体験は格別。1泊2日の滞在でその魅力を最大限に引き出せる。', concern: '都心からのアクセスが2時間半程度と、日帰りにはやや遠い。滞在型のゴルフ旅行としての計画がおすすめ。', address: '〒410-2507 静岡県伊豆市菅引638-83' },
+            { id: 'fujimi_kogen', name: '富士見高原ゴルフコース', rank: 5, elevation: 1342, access: 120, budget: 'ミドルレンジ', price: '平日昼食付:約11,820円~', quality: 4.3, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/200060/', description: '標高1,300m超、夏の平均気温21℃という別格のアルペン体験。7,000ヤードを超える本格的なプレーヤーズ・コースで、正確なショットメイキングが要求される。', expert_view: '最高の涼しさと手応えのあるラウンドを求める真摯なゴルファー向け。移動時間を厭わなければ、その先には最高の報酬が待っている稀有な存在。', concern: 'アクセス時間が2時間と圏内ギリギリ。本格的な山岳コースのため、初心者にはタフなラウンドになることも。', address: '〒399-0101 長野県諏訪郡富士見町境12067' },
+            { id: 'asagiri_cc', name: '朝霧カントリークラブ', rank: 6, elevation: 962, access: 100, budget: 'プレミアム', price: '平日セルフ:約16,950円~', quality: 4.8, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220001/', description: '設計の巨匠、富沢誠造氏が手掛けた「風景画の中でプレーする」ようなコース。18ホールすべてから美しい富士山を仰ぎ見ることができ、圧倒的な開放感が魅力。', expert_view: 'GDOで4.9という驚異的な評価。他の追随を許さない「景観美」と「リゾート感」が根幹にある。特別な日のゴルフや、大切なゲストをもてなす場として最適。', concern: '価格帯はプレミアムクラス。景観の素晴らしさから人気が高く、予約が取りにくい場合がある。', address: '〒418-0101 静岡県富士宮市根原字宝山380' },
+            { id: 'jurigi_cc', name: '十里木カントリークラブ', rank: 7, elevation: 966, access: 117, budget: 'バリュー', price: '平日:約5,990円~', quality: 4.0, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220039/', description: '標高1,000m、都心より気温が10℃も低い「天空の避暑地」。広々とした丘陵コースで、初心者から上級者までリゾートゴルフの爽快感を満喫できる。', expert_view: '「涼しさ」という根源的な要求に最も忠実に応えるコース。絶対的な標高のアドバンテージと魅力的な価格設定が光る。平日の利用が賢明。', concern: 'その人気とコストパフォーマンスの良さから、特に週末は混雑する傾向があり、プレー進行が遅くなる可能性。', address: '〒417-0803 静岡県富士市桑崎1016' },
+            { id: 'g8_fuji_cc', name: 'G8富士カントリークラブ', rank: 8, elevation: 765, access: 120, budget: 'バリュー', price: 'プランにより約10,000円前後~', quality: 3.6, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/220023/', description: '富士山南面の穏やかな丘陵地に広がる18ホール。杉や檜でセパレートされ落ち着いた雰囲気。メリハリの効いたレイアウトが特徴。', expert_view: '「戦略的な面白さ」と「コストパフォーマンス」を両立させた隠れた名コース。予算を抑えつつ、コースの質には妥協したくない賢明なゴルファーに推薦。', concern: 'ランキング上位のコースと比較すると、品質スコアがやや低め。最新の設備やサービスを期待する方には物足りない部分も。', address: '〒418-0112 静岡県富士宮市北山7426-63' },
+            { id: 'kawaguchiko_cc', name: '河口湖カントリークラブ', rank: 9, elevation: 967, access: 90, budget: 'ミドルレンジ', price: '平日:約15,070円~', quality: 4.0, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190011/', description: '霊峰富士の麓、自然と完璧に調和した全27ホールの名門コース。欧米の雰囲気が漂う洗練されたクラブハウスで、非日常の贅沢な時間が始まる。', expert_view: '真価はその「総合力」にある。27ホールという規模、名門としての品格、絶好のロケーションが高次元で融合。手応えのあるコースが挑戦意欲を掻き立てる。', concern: '名門コースゆえの風格があり、初心者にはやや敷居が高く感じられるかもしれない。価格もミドルレンジ以上。', address: '〒401-0301 山梨県南都留郡富士河口湖町船津6236' },
+            { id: 'otsuki_garden', name: '大月ガーデンゴルフクラブ', rank: 10, elevation: 725, access: 90, budget: 'バリュー', price: '平日:約5,990円~', quality: 3.7, url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/190034/', description: '卓越したアクセスとコストパフォーマンスのバランスでトップ10入り。英国貴族の館を彷彿とさせる壮麗なクラブハウスが特徴。', expert_view: 'まさに「コストパフォーマンスを極めた避暑地」。気軽に涼しいラウンドを楽しみたい、そんな衝動的な平日のゴルフに最適。高地ゴルフへの入門として非常に高い価値を提供。', concern: '標高がリスト内では比較的低いため、猛暑日には他の高標高コースほどの涼しさは期待できない可能性。', address: '〒402-0014 山梨県都留市朝日馬場1407' }
         ];
 
         const shortCourses = [
-            { id: 'sc_fujiakamatsu', rank: 1, name: '富士赤松ゴルフコース', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520250/', description: '標高1,000mの涼しさ、ドライバーを存分に使える戦略性、そして信じがたいコストパフォーマンスを誇る。ショートコースカテゴリーの頂点に立つ、完璧なバランス。', expert_view: '「ゲーム全体」を凝縮して練習できるエグゼクティブコースの最高傑作の一つ。あらゆる目的に対して最高の答えを提示してくれる。', concern: 'コストパフォーマンスが非常に高いため人気があり、混雑することが予想される。', holes: '18H / P58', length: '2,629Y', driver: '可', price: '平日回り放題(昼食付):5,300円~' },
-            { id: 'sc_takanenomori', rank: 2, name: '高嶺の森のゴルフクラブ', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520558/', description: '2021年オープンの新しい本格的ショートコース。総距離2,500ヤード超、パー4を2ホール含み、ドライバーをしっかり振れる。変化に富んだレイアウトが魅力。', expert_view: 'ショートコースの概念を覆すほどの「本格派」。ドライバーからウェッジまで、すべてのクラブを駆使する楽しみがある。本格的なゴルフ体験を求める層に強く推薦。', concern: '口コミによるとフェアウェイが狭めとの声もあり、正確性が求められるため、ショットが曲がりやすい初心者には難しい場面も。', holes: '18H / P56', length: '2,490Y', driver: '可', price: '平日1R:6,000円~' },
-            { id: 'sc_tonohara', rank: 3, name: '殿原倶楽部', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520296/', description: '名設計家・赤星四郎氏が手掛けた本格派。最長240ヤードのパー4を含み、戦略性の高さがうかがえる。江連忠ゴルフスクール併設の「ゴルフ道場」。', expert_view: '本格的な設計と練習環境を求めるゴルファーに最適。本コースさながらの緊張感を持って練習に臨める。コストパフォーマンスにも優れる。', concern: 'バンカーなどハザードが巧みに配置されており、スコアメイクに苦しむ可能性がある。純粋な練習には良いが、初心者には手強い。', holes: '9H / P28', length: '1,323Y', driver: '可', price: '平日回り放題:3,500円' },
-            { id: 'sc_ooya', rank: 4, name: '大谷ゴルフ場', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520222/', description: '駿河湾と静岡市街を一望できる景観豊かな18ホール。ショートコースでありながらドライバーが使用可能なパー4が存在し、より実践に近い練習が可能。', expert_view: '静岡エリアでドライバーを使える貴重なショートコース。併設の練習場からの流れはスキルアップに効率的。1人でのラウンドも歓迎。', concern: 'ドライバーが使えるホールは1つのみ。本格的なティーショットの練習には不向きかもしれない。', holes: '18H / P55', length: '2,023Y', driver: '可', price: '平日1R:3,200円~' },
-            { id: 'sc_fujigane', rank: 5, name: '富士ヶ嶺グリーンクラブ', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520300/', description: '標高1,200mに迫る屈指の高さを誇る。圧倒的な涼しさと絶景を、驚くほど手頃な価格で享受できる。アイアンショットとアプローチの精度を磨くのに理想的。', expert_view: 'まさに「純粋主義者のための練習天国」。ただひたすらに涼しい環境でアイアンプレーに打ち込みたいゴルファーにとって、これ以上の場所はない。', concern: 'ドライバー使用不可。支払いは現金のみ、手引きカートなど、シンプルな運営スタイルが合わない人もいるかも。', holes: '9H / P27', length: '1,002Y', driver: '不可', price: '9H:1,700円~' }
+            { id: 'sc_fujiakamatsu', rank: 1, name: '富士赤松ゴルフコース', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520250/', description: '標高1,000mの涼しさ、ドライバーを存分に使える戦略性、そして信じがたいコストパフォーマンスを誇る。ショートコースカテゴリーの頂点に立つ、完璧なバランス。', expert_view: '「ゲーム全体」を凝縮して練習できるエグゼクティブコースの最高傑作の一つ。あらゆる目的に対して最高の答えを提示してくれる。', concern: 'コストパフォーマンスが非常に高いため人気があり、混雑することが予想される。', holes: '18H / P58', length: '2,629Y', driver: '可', price: '平日回り放題(昼食付):5,300円~', address: '〒401-0320 山梨県南都留郡鳴沢村絶頭7246' },
+            { id: 'sc_takanenomori', rank: 2, name: '高嶺の森のゴルフクラブ', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520558/', description: '2021年オープンの新しい本格的ショートコース。総距離2,500ヤード超、パー4を2ホール含み、ドライバーをしっかり振れる。変化に富んだレイアウトが魅力。', expert_view: 'ショートコースの概念を覆すほどの「本格派」。ドライバーからウェッジまで、すべてのクラブを駆使する楽しみがある。本格的なゴルフ体験を求める層に強く推薦。', concern: '口コミによるとフェアウェイが狭めとの声もあり、正確性が求められるため、ショットが曲がりやすい初心者には難しい場面も。', holes: '18H / P56', length: '2,490Y', driver: '可', price: '平日1R:6,000円~', address: '〒412-0002 静岡県御殿場市上小林1489-1' },
+            { id: 'sc_tonohara', rank: 3, name: '殿原倶楽部', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520296/', description: '名設計家・赤星四郎氏が手掛けた本格派。最長240ヤードのパー4を含み、戦略性の高さがうかがえる。江連忠ゴルフスクール併設の「ゴルフ道場」。', expert_view: '本格的な設計と練習環境を求めるゴルファーに最適。本コースさながらの緊張感を持って練習に臨める。コストパフォーマンスにも優れる。', concern: 'バンカーなどハザードが巧みに配置されており、スコアメイクに苦しむ可能性がある。純粋な練習には良いが、初心者には手強い。', holes: '9H / P28', length: '1,323Y', driver: '可', price: '平日回り放題:3,500円', address: '〒400-0502 山梨県南巨摩郡富士川町最勝寺1538' },
+            { id: 'sc_ooya', rank: 4, name: '大谷ゴルフ場', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520222/', description: '駿河湾と静岡市街を一望できる景観豊かな18ホール。ショートコースでありながらドライバーが使用可能なパー4が存在し、より実践に近い練習が可能。', expert_view: '静岡エリアでドライバーを使える貴重なショートコース。併設の練習場からの流れはスキルアップに効率的。1人でのラウンドも歓迎。', concern: 'ドライバーが使えるホールは1つのみ。本格的なティーショットの練習には不向きかもしれない。', holes: '18H / P55', length: '2,023Y', driver: '可', price: '平日1R:3,200円~', address: '〒422-8017 静岡県静岡市駿河区大谷5905-1' },
+            { id: 'sc_fujigane', rank: 5, name: '富士ヶ嶺グリーンクラブ', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520300/', description: '標高1,200mに迫る屈指の高さを誇る。圧倒的な涼しさと絶景を、驚くほど手頃な価格で享受できる。アイアンショットとアプローチの精度を磨くのに理想的。', expert_view: 'まさに「純粋主義者のための練習天国」。ただひたすらに涼しい環境でアイアンプレーに打ち込みたいゴルファーにとって、これ以上の場所はない。', concern: 'ドライバー使用不可。支払いは現金のみ、手引きカートなど、シンプルな運営スタイルが合わない人もいるかも。', holes: '9H / P27', length: '1,002Y', driver: '不可', price: '9H:1,700円~', address: '〒401-0338 山梨県南都留郡富士河口湖町富士ヶ嶺2-1' }
         ];
-
+        
+        // --- データ正規化関数 ---
         const normalizeData = (course) => {
             const accessScore = Math.max(1, Math.min(5, 5 - (course.access - 90) / 15));
             const coolnessScore = Math.max(1, Math.min(5, (course.elevation - 600) / 200 + 1));
@@ -153,15 +180,73 @@
             const qualityScore = course.quality;
             return [accessScore, coolnessScore, budgetScore, qualityScore];
         };
+        
+        // --- 初期化処理 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const courseSelector = document.getElementById('course-selector');
+            const fullCourseRankingContainer = document.getElementById('full-course-ranking');
+            const shortCourseRankingContainer = document.getElementById('short-course-ranking');
+            const summaryFullCoursesContainer = document.getElementById('summary-full-courses');
+            const summaryShortCoursesContainer = document.getElementById('summary-short-courses');
+            
+            fullCourses.forEach(course => {
+                summaryFullCoursesContainer.appendChild(createSummaryRankItem(course));
+            });
+            shortCourses.forEach(course => {
+                summaryShortCoursesContainer.appendChild(createSummaryRankItem(course));
+            });
 
+            fullCourses.forEach(course => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center';
+                div.innerHTML = `
+                    <input type="checkbox" id="${course.id}" value="${course.id}" class="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-500">
+                    <label for="${course.id}" class="ml-2 block text-sm text-gray-900">${course.name}</label>
+                `;
+                courseSelector.appendChild(div);
+                const card = createCourseCard(course, 'teal');
+                fullCourseRankingContainer.appendChild(card);
+            });
+
+            shortCourses.forEach(course => {
+                const card = createCourseCard(course, 'sky');
+                shortCourseRankingContainer.appendChild(card);
+            });
+
+            setupRadarChart();
+            
+            const initialCourses = fullCourses.slice(0, 3).map(c => c.id);
+            initialCourses.forEach(id => {
+                document.getElementById(id).checked = true;
+            });
+            updateRadarChart();
+        });
+
+        // --- 簡易ランキングアイテム生成関数 ---
+        function createSummaryRankItem(course) {
+            const li = document.createElement('li');
+            li.className = 'flex items-center bg-white/50 p-2 rounded-lg';
+            let badgeClass = 'other';
+            if (course.rank === 1) badgeClass = 'gold';
+            else if (course.rank === 2) badgeClass = 'silver';
+            else if (course.rank === 3) badgeClass = 'bronze';
+            
+            li.innerHTML = `<div class="rank-badge ${badgeClass}">${course.rank}</div> <span class="ml-3 font-semibold">${course.name}</span>`;
+            return li;
+        }
+
+        // --- ランキングカード生成関数 (修正済み) ---
         function createCourseCard(course, color) {
             const card = document.createElement('div');
             card.className = `bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col`;
             
             let metricsHtml = '';
             let rawDataHtml = '';
+            let mapHtml = '';
+            let concernHtml = '';
 
-            if (course.budget) { // Full course
+            // フルコース用のデータ表示
+            if (course.budget) {
                 const [accessScore, coolnessScore, budgetScore, qualityScore] = normalizeData(course);
                 metricsHtml = `
                     <div class="mt-4 border-t border-gray-200 pt-4">
@@ -172,43 +257,65 @@
                             <span>予算: <strong class="text-lg text-${color}-700">${budgetScore.toFixed(1)}</strong></span>
                             <span>品質: <strong class="text-lg text-${color}-700">${qualityScore.toFixed(1)}</strong></span>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 rawDataHtml = `
                     <div class="mt-4 border-t border-gray-200 pt-4">
                          <h5 class="text-sm font-bold text-gray-500 mb-3">コースデータ詳細</h5>
                          <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700">
-                             <span>所要時間: <strong class="text-lg text-gray-800">${course.access}分</strong></span>
-                             <span>標高: <strong class="text-lg text-gray-800">${course.elevation}m</strong></span>
-                             <span class="col-span-2">料金目安: <strong class="text-lg text-gray-800">${course.price}</strong></span>
-                             <span>口コミ: <strong class="text-lg text-gray-800">${course.quality}点</strong></span>
+                             <span>所要時間: <strong class="text-base text-gray-800">${course.access}分</strong></span>
+                             <span>標高: <strong class="text-base text-gray-800">${course.elevation}m</strong></span>
+                             <span class="col-span-2">料金目安: <strong class="text-base text-gray-800">${course.price}</strong></span>
+                             <span>口コミ: <strong class="text-base text-gray-800">${course.quality}点</strong></span>
+                             <span class="col-span-2">住所: <strong class="text-xs text-gray-800">${course.address}</strong></span>
                          </div>
-                    </div>
-                `;
-            } else { // Short course
+                    </div>`;
+            } 
+            // ショートコース用のデータ表示
+            else if (course.holes) {
                  rawDataHtml = `
                     <div class="mt-4 border-t border-gray-200 pt-4">
                          <h5 class="text-sm font-bold text-gray-500 mb-3">コースデータ詳細</h5>
                          <div class="grid grid-cols-2 gap-x-6 gap-y-3 text-sm text-gray-700">
-                             <span>ホール: <strong class="text-lg text-gray-800">${course.holes}</strong></span>
-                             <span>総距離: <strong class="text-lg text-gray-800">${course.length}</strong></span>
-                             <span class="col-span-2">料金目安: <strong class="text-lg text-gray-800">${course.price}</strong></span>
-                             <span>ドライバー: <strong class="text-lg text-gray-800">${course.driver}</strong></span>
+                             <span>ホール: <strong class="text-base text-gray-800">${course.holes}</strong></span>
+                             <span>総距離: <strong class="text-base text-gray-800">${course.length}</strong></span>
+                             <span class="col-span-2">料金目安: <strong class="text-base text-gray-800">${course.price}</strong></span>
+                             <span>ドライバー: <strong class="text-base text-gray-800">${course.driver}</strong></span>
+                             <span class="col-span-2">住所: <strong class="text-xs text-gray-800">${course.address}</strong></span>
                          </div>
-                    </div>
-                `;
+                    </div>`;
             }
 
-            let concernHtml = course.concern ? `
-                <div class="mt-4">
-                     <p class="text-sm text-amber-800 bg-amber-100 p-3 rounded-lg flex items-start">
-                        <span class="flex-shrink-0 mr-2 mt-0.5">
-                            <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8.257 3.099c.636-1.21 2.37-1.21 3.006 0l4.286 8.183c.63 1.202-.28 2.718-1.655 2.718H5.626c-1.375 0-2.285-1.516-1.655-2.718l4.286-8.183zM10 12a1 1 0 110-2 1 1 0 010 2zm-1-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
-                        </span>
-                        <span><strong>懸念点:</strong> ${course.concern}</span>
-                     </p>
-                </div>
-            ` : '';
+            //【修正箇所】マップ埋め込みコード
+            if(course.address) {
+                const encodedAddress = encodeURIComponent(course.address);
+                mapHtml = `
+                <div class="mt-4 border-t border-gray-200 pt-4">
+                    <h5 class="text-sm font-bold text-gray-500 mb-3">アクセスマップ</h5>
+                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+                         <iframe 
+                            src="https://maps.google.com/maps?q=${encodedAddress}&output=embed&t=k"
+                            width="100%" 
+                            height="250" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                          </iframe>
+                    </div>
+                </div>`;
+            }
+
+            if (course.concern) {
+                concernHtml = `
+                    <div class="mt-4">
+                         <p class="text-sm text-amber-800 bg-amber-100 p-3 rounded-lg flex items-start">
+                            <span class="flex-shrink-0 mr-2 mt-0.5">
+                                <svg class="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M8.257 3.099c.636-1.21 2.37-1.21 3.006 0l4.286 8.183c.63 1.202-.28 2.718-1.655 2.718H5.626c-1.375 0-2.285-1.516-1.655-2.718l4.286-8.183zM10 12a1 1 0 110-2 1 1 0 010 2zm-1-4a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+                            </span>
+                            <span><strong>懸念点:</strong> ${course.concern}</span>
+                         </p>
+                    </div>`;
+            }
 
             card.innerHTML = `
                 <div class="bg-${color}-600 text-white p-4">
@@ -224,29 +331,95 @@
                         ${concernHtml}
                         ${metricsHtml}
                         ${rawDataHtml}
+                        ${mapHtml}
                     </div>
                     <a href="${course.url}" target="_blank" rel="noopener noreferrer" class="mt-6 block bg-${color}-600 hover:bg-${color}-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-center w-full">
                         楽天GORAで詳細を見る
                     </a>
-                </div>
-            `;
+                </div>`;
             return card;
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const fullCourseRankingContainer = document.getElementById('full-course-ranking');
-            const shortCourseRankingContainer = document.getElementById('short-course-ranking');
-            
-            fullCourses.forEach(course => {
-                const card = createCourseCard(course, 'teal');
-                fullCourseRankingContainer.appendChild(card);
+        // --- レーダーチャート関連 ---
+        let radarChart;
+        const chartColors = [
+            'rgba(20, 184, 166, 0.7)', 'rgba(234, 179, 8, 0.7)', 'rgba(239, 68, 68, 0.7)',
+            'rgba(59, 130, 246, 0.7)', 'rgba(139, 92, 246, 0.7)'
+        ];
+
+        function setupRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['アクセス', '涼しさ(標高)', '予算', '品質'],
+                    datasets: []
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0, suggestedMax: 5,
+                            pointLabels: { 
+                                font: { 
+                                    size: window.innerWidth < 768 ? 11 : 14,
+                                    weight: 'bold' 
+                                } 
+                            },
+                            ticks: { 
+                                stepSize: 1, 
+                                backdropColor: 'rgba(255, 255, 255, 0.75)' 
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { 
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: window.innerWidth < 768 ? 10 : 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.dataset.label || ''}: ${context.parsed.r.toFixed(2)}`
+                            }
+                        }
+                    }
+                }
             });
 
-            shortCourses.forEach(course => {
-                const card = createCourseCard(course, 'sky');
-                shortCourseRankingContainer.appendChild(card);
+            document.getElementById('course-selector').addEventListener('change', (e) => {
+                if(e.target.type === 'checkbox') {
+                    if (document.querySelectorAll('#course-selector input:checked').length > 5) {
+                        e.target.checked = false;
+                        alert('比較できるゴルフ場は5件までです。');
+                    } else {
+                        updateRadarChart();
+                    }
+                }
             });
-        });
+        }
+
+        function updateRadarChart() {
+            const selectedIds = Array.from(document.querySelectorAll('#course-selector input:checked')).map(cb => cb.value);
+            const selectedCourses = fullCourses.filter(course => selectedIds.includes(course.id));
+            
+            radarChart.data.datasets = selectedCourses.map((course, index) => ({
+                label: course.name,
+                data: normalizeData(course),
+                backgroundColor: chartColors[index % chartColors.length].replace('0.7', '0.2'),
+                borderColor: chartColors[index % chartColors.length],
+                pointBackgroundColor: chartColors[index % chartColors.length],
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: chartColors[index % chartColors.length]
+            }));
+            
+            radarChart.update();
+        }
     </script>
 </body>
 </html>
