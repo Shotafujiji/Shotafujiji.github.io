@@ -60,11 +60,13 @@
                 max-height: 450px; /* 高くなりすぎないように最大値を設定 */
             }
         }
+        /* Aspect Ratio Fallback */
+        .aspect-w-16 { position: relative; padding-bottom: 56.25%; }
+        .aspect-h-9 > * { position: absolute; height: 100%; width: 100%; top: 0; right: 0; bottom: 0; left: 0; }
     </style>
 </head>
 <body class="text-gray-800">
 
-    <!-- ヘッダー -->
     <header class="bg-teal-800 text-white p-8 md:p-16 rounded-b-3xl shadow-2xl">
         <div class="bg-black bg-opacity-20 p-6 rounded-xl">
             <h1 class="text-3xl md:text-5xl font-bold mb-2 text-shadow">ゴルフ場選定ガイド</h1>
@@ -74,7 +76,6 @@
 
     <main class="container mx-auto p-4 md:p-8">
 
-        <!-- ランキング一覧セクション -->
         <section id="summary-ranking" class="mb-12">
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700">ランキング一覧</h2>
             <div class="glassmorphism p-6 rounded-2xl shadow-lg max-w-5xl mx-auto">
@@ -91,15 +92,13 @@
             </div>
         </section>
 
-        <!-- 比較ツールセクション -->
         <section id="comparison-tool" class="mb-12">
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700">ゴルフ場 比較ツール</h2>
             <div class="glassmorphism p-6 rounded-2xl shadow-lg">
                 <div class="mb-6">
                     <h3 class="font-bold text-lg mb-4 text-center">比較したいフルコースを選択してください (最大5件)</h3>
                     <div id="course-selector" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                        <!-- チェックボックスはJSで動的に生成 -->
-                    </div>
+                        </div>
                 </div>
                 <div class="chart-container">
                     <canvas id="radarChart"></canvas>
@@ -107,28 +106,22 @@
             </div>
         </section>
 
-        <!-- 詳細ランキングセクション -->
         <section id="ranking" class="mb-12">
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-700">厳選ゴルフコース詳細</h2>
             
-            <!-- フルコースランキング -->
             <div class="mb-12">
                 <h3 class="text-xl md:text-2xl font-bold mb-6 text-center bg-teal-600 text-white py-3 rounded-lg shadow-md">フルコース10選</h3>
                 <div id="full-course-ranking" class="grid gap-6 md:grid-cols-2">
-                    <!-- ランキングカードはJSで動的に生成 -->
-                </div>
+                    </div>
             </div>
 
-            <!-- ショートコースランキング -->
             <div>
                 <h3 class="text-xl md:text-2xl font-bold mb-6 text-center bg-sky-600 text-white py-3 rounded-lg shadow-md">ショートコース5選</h3>
                 <div id="short-course-ranking" class="grid gap-6 md:grid-cols-2">
-                    <!-- ランキングカードはJSで動的に生成 -->
-                </div>
+                    </div>
             </div>
         </section>
 
-        <!-- リサーチ方針セクション -->
         <section id="research-policy" class="glassmorphism p-6 md:p-8 rounded-2xl shadow-lg">
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-gray-700">リサーチ方針について</h2>
             <div class="max-w-4xl mx-auto space-y-6">
@@ -178,7 +171,6 @@
         { id: 'sc_fujigane', rank: 5, name: '富士ヶ嶺グリーンクラブ', url: 'https://booking.gora.golf.rakuten.co.jp/guide/disp/c_id/520300/', description: '標高1,200mに迫る屈指の高さを誇る。圧倒的な涼しさと絶景を、驚くほど手頃な価格で享受できる。アイアンショットとアプローチの精度を磨くのに理想的。', expert_view: 'まさに「純粋主義者のための練習天国」。ただひたすらに涼しい環境でアイアンプレーに打ち込みたいゴルファーにとって、これ以上の場所はない。', concern: 'ドライバー使用不可。支払いは現金のみ、手引きカートなど、シンプルな運営スタイルが合わない人もいるかも。', holes: '9H / P27', length: '1,002Y', driver: '不可', price: '9H:1,700円~', address: '〒401-0338 山梨県南都留郡富士河口湖町富士ヶ嶺2-1' }
     ];
         
-
         // --- データ正規化関数 ---
         const normalizeData = (course) => {
             const accessScore = Math.max(1, Math.min(5, 5 - (course.access - 90) / 15));
@@ -197,7 +189,6 @@
             const summaryFullCoursesContainer = document.getElementById('summary-full-courses');
             const summaryShortCoursesContainer = document.getElementById('summary-short-courses');
             
-            // 簡易ランキングを生成
             fullCourses.forEach(course => {
                 summaryFullCoursesContainer.appendChild(createSummaryRankItem(course));
             });
@@ -205,7 +196,6 @@
                 summaryShortCoursesContainer.appendChild(createSummaryRankItem(course));
             });
 
-            // 詳細ランキングカードとチェックボックスを生成
             fullCourses.forEach(course => {
                 const div = document.createElement('div');
                 div.className = 'flex items-center';
@@ -245,14 +235,12 @@
             return li;
         }
 
-        // --- ランキングカード生成関数 ---
+        // --- ランキングカード生成関数 (修正済み) ---
         function createCourseCard(course, color) {
             const card = document.createElement('div');
             card.className = `bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 flex flex-col`;
             
-            let metricsHtml = '';
-            let rawDataHtml = '';
-            let mapHtml = '';
+            let metricsHtml = '', rawDataHtml = '', mapHtml = '', concernHtml = '';
 
             // フルコース用のデータ表示
             if (course.budget) {
@@ -266,8 +254,7 @@
                             <span>予算: <strong class="text-lg text-${color}-700">${budgetScore.toFixed(1)}</strong></span>
                             <span>品質: <strong class="text-lg text-${color}-700">${qualityScore.toFixed(1)}</strong></span>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 rawDataHtml = `
                     <div class="mt-4 border-t border-gray-200 pt-4">
                          <h5 class="text-sm font-bold text-gray-500 mb-3">コースデータ詳細</h5>
@@ -278,8 +265,7 @@
                              <span>口コミ: <strong class="text-base text-gray-800">${course.quality}点</strong></span>
                              <span class="col-span-2">住所: <strong class="text-xs text-gray-800">${course.address}</strong></span>
                          </div>
-                    </div>
-                `;
+                    </div>`;
             } 
             // ショートコース用のデータ表示
             else if (course.holes) {
@@ -293,17 +279,17 @@
                              <span>ドライバー: <strong class="text-base text-gray-800">${course.driver}</strong></span>
                              <span class="col-span-2">住所: <strong class="text-xs text-gray-800">${course.address}</strong></span>
                          </div>
-                    </div>
-                `;
+                    </div>`;
             }
 
+            //【修正箇所】マップ埋め込みコードのテンプレートリテラルを修正
             if(course.address) {
                 mapHtml = `
                 <div class="mt-4 border-t border-gray-200 pt-4">
                     <h5 class="text-sm font-bold text-gray-500 mb-3">アクセスマップ</h5>
                     <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
                          <iframe 
-                            src="https://maps.google.com/maps?q=${encodeURIComponent(course.address)}&output=embed" 
+                            src="https://maps.google.com/maps?q=${encodeURIComponent(course.address)}&output=embed&t=k"
                             width="100%" 
                             height="250" 
                             style="border:0;" 
@@ -312,11 +298,9 @@
                             referrerpolicy="no-referrer-when-downgrade">
                           </iframe>
                     </div>
-                </div>
-                `;
+                </div>`;
             }
 
-            let concernHtml = '';
             if (course.concern) {
                 concernHtml = `
                     <div class="mt-4">
@@ -326,8 +310,7 @@
                             </span>
                             <span><strong>懸念点:</strong> ${course.concern}</span>
                          </p>
-                    </div>
-                `;
+                    </div>`;
             }
 
             card.innerHTML = `
@@ -349,8 +332,7 @@
                     <a href="${course.url}" target="_blank" rel="noopener noreferrer" class="mt-6 block bg-${color}-600 hover:bg-${color}-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-center w-full">
                         楽天GORAで詳細を見る
                     </a>
-                </div>
-            `;
+                </div>`;
             return card;
         }
 
